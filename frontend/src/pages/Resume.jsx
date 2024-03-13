@@ -138,15 +138,19 @@ export default function Resume() {
 
                 </Grid>
             </Grid>
-
+            <Divider  flexItem></Divider>
             <ContactSection resumeId={resumeData.id}></ContactSection>
+            <Divider style={{width:'100%'}} textAlign={"center"}><Typography>Skills</Typography></Divider>
+
             <SkillSection resumeId={resumeData.id}></SkillSection>
+            <Divider style={{width:'100%'}} flexItem><Typography>Experiences</Typography></Divider>
+
             <ExperienceSection resumeId={resumeData.id}></ExperienceSection>
-            <Divider></Divider>
+            <Divider style={{width:'100%'}}><Typography>Academic</Typography></Divider>
             <FormationSection resumeId={resumeData.id}></FormationSection>
-            <Divider></Divider>
+            <Divider style={{width:'100%'}}><Typography>Hobbies</Typography></Divider>
             <HobbySection resumeId={resumeData.id}></HobbySection>
-            <Divider></Divider>
+            <Divider style={{width:'100%'}}><Typography>Languages</Typography></Divider>
             <LanguageSection resumeId={resumeData.id}></LanguageSection>
 
 
