@@ -77,11 +77,13 @@ model Resume {
   hobbies     Hobby[]
   User        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String       @unique @db.ObjectId
+  published   Boolean      @default(false)
 }
 
 model Skill {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String
+  description String?
   mastery     String
   logoURL     String?
   isSoft      Boolean
