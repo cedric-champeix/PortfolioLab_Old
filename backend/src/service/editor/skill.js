@@ -4,11 +4,22 @@ module.exports = {
     getAllSkills: async (req, res) => {
         try {
             const user = req.user
+            const data = req.query
+
+            const filter = {
+                userId: user.id
+            }
+
+            if (data.resumeId) {
+                filter.resumeId = data.resumeId
+            } else if (data.projectId) {
+                filter.projectsIds = {
+                    has: data.projectId,
+                }
+            }
 
             const skills = await prisma.skill.findMany({
-                where: {
-                    userId: user.id
-                }
+                where: filter
             })
 
             return res.status(200).json(skills)
@@ -51,6 +62,7 @@ module.exports = {
             const skill = await prisma.skill.create({
                 data: {
                     name: data.name,
+                    description: data.description,
                     isSoft: data.isSoft,
                     Resume: data.Resume,
                     Projects: {
@@ -79,7 +91,7 @@ module.exports = {
             const skillId = req.params.skillId
 
             let valuesToModify = {}
-            const acceptable_keys = ["name", "isSoft"]
+            const acceptable_keys = ["name", "description", "isSoft"]
 
             for (const key of acceptable_keys) {
                 if (key in data)
