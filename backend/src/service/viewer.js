@@ -39,7 +39,7 @@ module.exports = {
 
 
             console.log("Resume fetched")
-            if(resume === null) {
+            if (resume === null) {
                 return res.status(404).json({message: "No resume found."})
             }
             return res.status(200).json(resume)
@@ -51,24 +51,60 @@ module.exports = {
         }
     },
 
-    getProjects: async (req, res) => {
+    getPortfolio: async (req, res) => {
         try {
-            const id = req.userId
+            const {username} = req.params
 
-            const projects = await prisma.project.findMany({
+            const userProjects = await prisma.user.findUnique({
                 where: {
-                    userId: id,
-                    published: true
+                    username: username
+                },
+                select: {
+                    projects: {
+                        include: {
+                            MainImage: true,
+                            skills: true
+                        }
+                    }
                 }
             })
 
-            console.log("Projects fetched")
-            console.log(projects)
-            return res.status(200).json(projects)
+            console.log("Projects fetched: ", userProjects)
+            return res.status(200).json(userProjects.projects)
         } catch (e) {
-            console.error(e)
-            console.log("Error : projects can not be fetched")
+            console.error("Could not fetch projects: ", e)
             return res.status(500).json({message: "Error : projects can not be fetched"})
+        }
+    },
+
+    getProject: async (req, res) => {
+        try {
+            const {username, projectId} = req.params
+
+            const project = await prisma.project.findUnique({
+                where: {
+                    id: projectId,
+                    User: {
+                        username: username
+                    }
+                },
+                include: {
+                    components: {
+                        orderBy: {
+                            index: "asc"
+                        }
+                    },
+                    skills: true,
+                    MainImage: true,
+                    ProjectImages: true
+                }
+            })
+
+            return res.status(200).json(project)
+
+        } catch (e) {
+            console.error("Could not fetch project: ", e)
+            return res.status(500).json({message: "Error: could not fetch project"})
         }
     }
 }
