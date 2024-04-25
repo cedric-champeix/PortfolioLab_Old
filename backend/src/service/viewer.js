@@ -61,6 +61,9 @@ module.exports = {
                 },
                 select: {
                     projects: {
+                        where: {
+                            visible: true
+                        },
                         include: {
                             MainImage: true,
                             skills: true
