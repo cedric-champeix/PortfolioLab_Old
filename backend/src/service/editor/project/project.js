@@ -20,7 +20,7 @@ module.exports = {
                 }
             })
 
-            return res.status(200).json(projects)
+            return res.status(200).json(projects.projects)
 
         } catch (e) {
             console.error(e)
@@ -140,6 +140,29 @@ module.exports = {
         } catch (e) {
             console.error(e)
             return res.status(500).json({message: "Couldn't delete project."})
+        }
+    },
+
+    updateProjectVisibility: async (req, res) => {
+        try {
+            const {user, body} = req
+            const {myProjectId} = req.params
+
+            await prisma.project.update({
+                where: {
+                    id: myProjectId,
+                    userId: user.id
+                },
+                data: {
+                    visible: body.visible
+                }
+            })
+
+            return res.sendStatus(200)
+
+        } catch (e) {
+            console.error(e)
+            return res.status(500).json({message: "Couldn't update project visibility."})
         }
     },
 

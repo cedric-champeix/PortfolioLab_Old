@@ -7,6 +7,13 @@ module.exports = {
     create: async (req, res) => {
         try {
             const data = req.body
+
+            const usernameRegex = /^\w+$/
+            if (!usernameRegex.test(data.username)) {
+                console.log(data.username)
+                throw new Error("Username can only contain digits, uppercase and lowercase letters. No special characters are allowed.")
+            }
+
             const salt = await bcrypt.genSalt(NB_SALT_ROUNDS)
             let hashedPwd = await bcrypt.hash(data.pwd, salt)
 
@@ -89,12 +96,17 @@ module.exports = {
 
     },
     getUser: async (req, res) => {
-        const data = req.user
 
         try {
-            return res.status(200).json({
-                username: data.username
+            const user = await prisma.user.findUnique({
+                where: {
+                    id: req.user.id
+                }
             })
+
+            delete user.pwd
+
+            return res.status(200).json(user)
         } catch (e) {
             console.error(e)
             res.status(500).json({message: "Internal Server Error"})
