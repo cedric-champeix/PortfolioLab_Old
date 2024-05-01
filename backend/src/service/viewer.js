@@ -25,9 +25,8 @@ module.exports = {
             /*
              * If the resume is private, we notify the client that the resume is unpublished
              */
-            if(!published){
-                return res.status(200).json({published: false})
-            }
+            if(!published)
+                return res.status(404).json({message: "The resume has not been published."})
 
             /*
              * STEP 2 : if the resume is public, we need to get the data and transform it to have the published data instead of the data itself
@@ -134,6 +133,9 @@ module.exports = {
                     ProjectImages: true
                 }
             })
+
+            if (!project)
+                return res.status(404).json({message: "No project found."})
 
             return res.status(200).json(project)
 
