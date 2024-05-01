@@ -118,6 +118,7 @@ module.exports = {
             const project = await prisma.project.findUnique({
                 where: {
                     id: projectId,
+                    visible: true,
                     User: {
                         username: username
                     }
